@@ -169,11 +169,60 @@ const promptUser = () => {
     ]);
 };
 
-// TODO: Create a function to write README file
-function writeToFile(fileName, data) {}
+// function to initialize app
+function init() {
+    var data = {};
+    promptUser()
+        .then((answers) => {
+            data = answers;
+            return answers;
+        })
+        .then(ghUserData => {
+            const ghUserTemp = ghUserApi.getUser(ghUserData.accountName);
+            return ghUserTemp;
+        })
+        .then(temData => {
+            data.imageUrl = temData.data.avatar_url;
+            data.userFullName = temData.data.name;
+        })
+        .then(getRepoData => {
+            const repData = fetch('https://api.github.com/repos/' + data.accountName + '/' + data.repoName)
+                .then((response) => {
+                    return response.json();
+                })
+                .then((rData) => {
+                    return rData;
+                })
+                .then(compInfo => {
+                    data.licenseInfo = compInfo.license;
+                })
+                .then(licenseDetail => {
+                    const licDetail = fetch(data.licenseInfo.url)
+                        .then((response) => {
+                            return response.json();
+                        })
+                        .then((lData) => {
+                            return lData;
+                        })
+                        .then(compLInfo => {
+                            data.licenseDetail = compLInfo;
+                            /*  console.log(data); */
+                        })
+                        .then(generateMD => {
+                            /* console.log(data); */
+                            return generateMarkdown(data);
+                        })
+                        .then(pageReadme => {
+                            return writeFile(pageReadme);
+                        })
+                        .then(writeFileResponse => {
+                            console.log(writeFileResponse.message);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                });
+        });
+}
 
-// TODO: Create a function to initialize app
-function init() {}
-
-// Function call to initialize app
 init();
