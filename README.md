@@ -62,5 +62,3 @@ node index.js
 * [node.js](https://nodejs.org/)
 * [npm](https://www.npmjs.com/)
 * [inquirer.js](https://www.npmjs.com/package/inquirer)
-* [axios.js](https://www.npmjs.com/package/axios)
-* [fs.js](https://www.npmjs.com/package/fs)
